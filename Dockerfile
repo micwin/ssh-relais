@@ -1,6 +1,6 @@
 # ssh server and  bash on alpine
 #
-# VERSION               0.2
+# VERSION               0.3
 
 FROM alpine:latest
 MAINTAINER Michael Winkler ""
