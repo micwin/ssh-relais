@@ -9,7 +9,7 @@ ssh-keygen -A
 while read line ; do
 	username=$(echo $line | cut  -d'|' -f1)
 	ssh_public_key=$(echo $line | cut  -d'|' -f2)
-	[[ -e "/home/$username" ]] && continue
+	[[ -e "/home/$username/.ssh/authorized_keys" ]] && continue
 	useradd -m -s /bin/bash $username
 	mkdir /home/$username/.ssh
 	echo $ssh_public_key > /home/$username/.ssh/authorized_keys
