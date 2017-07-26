@@ -1,35 +1,22 @@
-# ssh server and  bash on alpine
+# an ubuntu based ssh server
 #
-# VERSION               0.3
+# VERSION               0.2
 
-FROM alpine:latest
-MAINTAINER Michael Winkler ""
+FROM ubuntu:xenial
 
-# base setup
-ENV LC_ALL=en_US.UTF-8
+ENV LANG C.UTF-8
 
-# the root password
-ENV ROOT_PASS none
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y openssh-server git sshpass vim && apt-get clean
 
-# enable pubkey access and disable password access
-ENV ROOT_SSH_PUBKEY none
+RUN mkdir /var/run/sshd
 
-# make sure the package repository is up to date
-RUN apk update && apk upgrade
-
-# install bash
-RUN apk add bash
-RUN sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd
-
-# setup ssh server
-RUN apk add openssh && /usr/bin/ssh-keygen -A
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-ADD motd /etc/motd
-
-WORKDIR /root
+# for attached terminal
+WORKDIR /
 
 EXPOSE 22
 CMD [ "/entrypoint.sh" ]

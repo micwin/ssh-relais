@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# script to build a docker image.
+# script to build the docker image.
 #
 # you might probably run that using sudo
 #
@@ -12,5 +12,4 @@
 #
 # depending on how your docker has been installed
 
-docker build -t outpost/ssh-relais .
-
+docker build -t outpost/ssh-relais:ubuntu .

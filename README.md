@@ -4,38 +4,28 @@ A bash shell reachable via ssh. docker image to lightning fastly setup a ssh ser
 
 # starting container
 
-## using a public key
+users are created at container startup (not at image creation), utilizing a mounted file _ssh-users.lst_. This file is a pipe separated list of users and corresponding public keys, looking like that:
 
-Start a docker that binds its ssh port to localhost 4023 and gives acces to root for user with a private key corresponding to given public key.
+```
+mirsanmir|ssh-rsa AAAAB3NzaC1yc2EA+Q84Qs8y7Z3eROnTQzkb5Tmp24o0P2Yx4BH9FElmEHu0rM4+HSKwlDPrgAxbA2rMKnFo/qeJJgGXqiDf8IQm6jUrM9DK4x6C+YtWArARHvBCeHIU8CPlmv7sheKWnbDcyoa8gLsioeSpVer+N8Uw4GAatpsrufyVBTJP7T+uwvGKNoyYx mirsanmir@localhost
+doabollana|ssh-rsa AAAAB3NzaC1yc2EA+Q84Qs8y7Z3eROnTQzkb5Tmp24o0P2Yx4BH+YtWArARHvBCeHIU8CPlmv7sheKWnbDcyoa8gLsioeSpVer+N8Uw4GAatpsrufyVB9FElmEHu0rM4+HSKwlDPrgAxbA2rMKnFo/qeJJgGXqiDf8IQm6jUrM9DK4x6CTJP7T+uwvGKNoyYx doabollana@outpost
+leodone|ssh-rsa AAAAB3NzaC1yc2EA+Q84Qs8y7Z3eROnTQzkb5Tmp24o0P2Yx4BH+YtWArARHvBCeHIU8CPlmv7sheKWnbDcyoa8gLsioeSpVer+N8Uw4GAatpsrufyVB9FElmEHu0rM4+HSKwlDPrgAxbA2rMKnFo/qeJJgGXqiDf8IQm6jUrM9DK4x6CTJP7T+uwvGKNoyYx leodone@outpost
+```
 
-> docker run -d -p4023:22 -e ROOT_SSH_PUBKEY="$(ssh-show-public)" outpost/ssh-relais
+mount file when starting container:
 
-## using a password
-
-Start a docker that binds its ssh port to localhost 4023 and allows access user root with a clear text password.
-
-> ROOT_PASS="someotherpassword"
-> docker run -d -p 4022:22 -e ROOT_PASS outpost/ssh-relais
+> docker run -d -p 4022:22 --volume my_ssh-users.lst:/ssh-users.lst --name ssh-relais outpost/ssh-relais:ubuntu
 
 # accessing the container
 
 Use ssh
 
-> ssh root@localhost -p4022
+> ssh -A leodone@localhost -p4022
 
-Depending on wether you use password access or (correctly configured) public key access, you will be prompted for a password or not.
+Agent Forwarding is activated by default
 
+# accessing root
 
-# environment vars
+There is no way of accessing root via ssh. Use docker command instead:
 
-- ROOT_PASS : the password to connect as root. leave unset to disable root password access.
-
-- ROOT_SSH_PUBKEY : the public key to use when connecting to the container as root.
-
-# some more ideas
-
-- try mounting your home as /root ( _-v $HOME:/root_ ) to get your known bash environment to work with. Make sure not to _-e ROOT_SSH_PUBKEY_ because if done so, your _authorized_keys_ gets polluted with given public key
-
-- use the ssh relay to access a dmz or a docker-only network
-
-- use the ssh relay as a jump point proxy
+> docker exec -it ssh-relais /bin/bash

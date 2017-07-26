@@ -2,18 +2,23 @@
 
 set -e
 
-# configure ssh public key access 
-[[ "none" != "${ROOT_SSH_PUBKEY}" ]] && \
-	mkdir /root/.ssh && \
-	echo "${ROOT_SSH_PUBKEY}" >> /root/.ssh/authorized_keys && \
-	chown -R root:root /root/.ssh && \
-	chmod -R go-rwx /root/.ssh
+# recreate host keys with every restart
+ssh-keygen -A
 
-# configure password access (not recommended)
-[[ "none" != "${ROOT_PASS}" ]] && \
-	echo "Setting root pass to $ROOT_PASS ..." && \
-	echo "root:$ROOT_PASS" | chpasswd && \
-        /bin/sed -i -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-echo "Starting SSH daemon..." 
-/usr/sbin/sshd -D -e
+while read line ; do
+	username=$(echo $line | cut  -d'|' -f1)
+	ssh_public_key=$(echo $line | cut  -d'|' -f2)
+	[[ -e "/home/$username" ]] && continue
+	useradd -m -s /bin/bash $username
+	mkdir /home/$username/.ssh
+	echo $ssh_public_key > /home/$username/.ssh/authorized_keys
+	echo " Host *
+	  ForwardAgent yes" >> /home/$username/.ssh/config
+	chmod 700 /home/$username/.ssh
+	chown -R $username:$username /home/$username/.ssh
+
+done < /ssh-users.lst
+
+# start sshd
+/usr/sbin/sshd -D
