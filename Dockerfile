@@ -1,6 +1,5 @@
 # an ubuntu based ssh server
 #
-# VERSION               0.2
 
 FROM ubuntu:xenial
 
