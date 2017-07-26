@@ -1,6 +1,6 @@
 # the ssh-relais
 
-A bash shell reachable via ssh. docker image to lightning fastly setup a ssh server for use as a jump point.
+A ubuntu based bash shell reachable via ssh. docker image to lightning fastly setup a ssh server for use as a multi user jump point.
 
 # starting container
 
@@ -14,7 +14,7 @@ leodone|ssh-rsa AAAAB3NzaC1yc2EA+Q84Qs8y7Z3eROnTQzkb5Tmp24o0P2Yx4BH+YtWArARHvBCe
 
 mount file when starting container:
 
-> docker run -d -p 4022:22 --volume my_ssh-users.lst:/ssh-users.lst --name ssh-relais outpost/ssh-relais:ubuntu
+> docker run -d -p 4022:22 --volume my_ssh-users.lst:/ssh-users.lst --name ssh-relais outpost/ssh-relais:latest
 
 # accessing the container
 
