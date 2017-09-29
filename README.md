@@ -24,7 +24,7 @@ Use ssh
 
 # trespassing the container
 
-Since agent forwarding is activated by defaultyou could directly trespass the container with following command:
+Since agent forwarding is activated by default, you could directly trespass the container with following command:
 
 >  ssh -A -t leodone@localhost -p4022 -C "ssh -A someotheruser@10.249.18.30"
 
