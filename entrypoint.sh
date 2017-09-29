@@ -15,8 +15,8 @@ while read line ; do
 	echo $ssh_public_key > /home/$username/.ssh/authorized_keys
 	echo " Host *
 	  ForwardAgent yes" >> /home/$username/.ssh/config
-	chmod 700 /home/$username/.ssh
-	chown -R $username:$username /home/$username/.ssh
+	chown -R $username:$username /home/$username
+	chmod -R u=rwX,g=,o= /home/$username
 
 done < /ssh-users.lst
 
