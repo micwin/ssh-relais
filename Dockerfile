@@ -5,7 +5,7 @@ FROM ubuntu:xenial
 
 ENV LANG C.UTF-8
 
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y openssh-server git sshpass vim iputils-ping && apt-get clean
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y openssh-server git sshpass vim iputils-ping curl && apt-get clean
 
 RUN mkdir /var/run/sshd
 
