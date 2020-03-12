@@ -12,4 +12,4 @@
 #
 # depending on how your docker has been installed
 
-docker build -t outpost/ssh-relais:latest -t outpost/ssh-relais:xenial .
+docker build -t outpost/ssh-relais:latest -t outpost/ssh-relais:disco .
